@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    // TODO : Add Image resources from material design icons
+    // Card view content dimensions layout
+    <dimen name="card_image_size">50dp</dimen>
+    <dimen name="label_text">18sp</dimen>
+    <dimen name="value_label_text">16sp</dimen>
+    <dimen name="sunset_margin_start">12dp</dimen>
+    <dimen name="sunrise_margin_top">12dp</dimen>
+    <dimen name="card_image_margin_end">12dp</dimen>
+
+    //Divider dimensions
+    <dimen name="divider_height">1dp</dimen>
+    <dimen name="divider_margin">5dp</dimen>
+
+    //Main Screen padding
+    <dimen name="content_padding">8dp</dimen>
+
+    // Card View dimensions
+    <dimen name="card_margin_start">5dp</dimen>
+    <dimen name="card_margin_end">5dp</dimen>
+    <dimen name="card_margin_top">10dp</dimen>
+    <dimen name="card_corner_radius">10dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_padding">4dp</dimen>
+
+    //Progress Dialog dimensions
+    <dimen name="progress_dialog_padding">10dp</dimen>
+    <dimen name="progress_size">50dp</dimen>
+    <dimen name="progress_margin">10dp</dimen>
+    <dimen name="progress_text_size">16sp</dimen>
+    <dimen name="dialog_text_size">12sp</dimen>
+</resources>

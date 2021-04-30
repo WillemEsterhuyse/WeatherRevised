@@ -29,6 +29,7 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,6 +38,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
+@Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mClient: FusedLocationProviderClient
@@ -90,19 +92,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean
+    {
+        menuInflater.inflate(R.menu.menu_main,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+    {
+        return when(item.itemId)
+        {
+            R.id.act_refresh->{
+                requestLocationData()
+                true
+            }
+            else->return super.onOptionsItemSelected(item)
+        }
+    }
+
     @SuppressLint("MissingPermission")
     private fun requestLocationData()
     {
-        val  locationRequest = LocationRequest.create().apply {
-            interval = 100
-            fastestInterval = 50
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            maxWaitTime= 100
-        }
-
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-        mClient.requestLocationUpdates(locationRequest,locationCallback, Looper.myLooper())
+        val mLocationRequest = LocationRequest()
+        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        mClient.requestLocationUpdates(
+                mLocationRequest,locationCallback, Looper.myLooper()
+        )
     }
 
     private var locationCallback = object : LocationCallback()
@@ -134,9 +149,10 @@ class MainActivity : AppCompatActivity() {
 
             serviceCall.enqueue(object : Callback<WeatherResponse>
             {
-                override fun onFailure(call: Call<WeatherResponse>, t: Throwable?) = Toast.makeText(this@MainActivity,
-                    "Unable to perform action", Toast.LENGTH_SHORT).show()
+                override fun onFailure(call: Call<WeatherResponse>, t: Throwable?) {
 
+                    Log.e("ERROR : ",t.toString())
+                }
                 override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>)
                 {
                     if(response.isSuccessful)
@@ -220,7 +236,7 @@ class MainActivity : AppCompatActivity() {
     {
         mDialog = Dialog(this)
 
-        mDialog!!.setContentView(R.layout.dialog_progress)
+        mDialog!!.setContentView(R.layout.process_dialog)
 
         mDialog!!.show()
     }
@@ -239,30 +255,30 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun setupUI()
     {
-        val weatherResponseJsonString = sharedPreferences.getString(Constants.WEATHER_RESPONSE_DATA,"No Data")
+        val weatherResponseJsonString = sharedPreferences.getString(Constants.WEATHER_RESPONSE_DATA,"")
 
         if(!weatherResponseJsonString.isNullOrEmpty())
         {
             val list = Gson().fromJson(weatherResponseJsonString,WeatherResponse::class.java)
-           //Setup textviews in json response
+            // Setup textviews in json response
+            // Default naming conventions for text view eg. tv_description
             for(index in list.weather.indices)
             {
                 tv_common.text = list.weather[index].main
                 tv_common_description.text = list.weather[index].description
-                tv_temperature.text = list.main.temp.toString() +"Degrees(Celsius)"
-                tv_sunrise.text = unixTime(list.sys.sunrise)
-                tv_sunset.text = unixTime(list.sys.sunset)
-                tv_humidity.text =list.main.humidity.toString()+" % "
-                tv_minimum_temp.text =list.main.temp_min.toString()+" minimum"
-                tv_maximum_temp.text =list.main.temp_max.toString()+" maximum"
+                tv_temperature.text = list.main.temp.toString() +" "+ getString(R.string.degrees_c)
+                tv_sunrise_time.text = "Sunrise Time : " + unixTime(list.sys.sunrise)
+                tv_sunset_time.text = "Sunset Time : " + unixTime(list.sys.sunset)
+                tv_humidity.text =list.main.humidity.toString()+" % humidity"
+                tv_minimum_temp.text =list.main.temp_min.toString()+" C minimum"
+                tv_maximum_temp.text =list.main.temp_max.toString()+" C maximum"
                 tv_wind_speed.text = list.wind.speed.toString()
                 tv_name.text = list.name
                 tv_country_name.text = list.sys.country
 
-                when(list.weather[index].icon){
-
+                when(list.weather[index].icon)
+                {
                     //Image resources to be included
-
                 }
             }
         }
@@ -274,23 +290,5 @@ class MainActivity : AppCompatActivity() {
         val simpleDateFormat = SimpleDateFormat("hh:mm", Locale.ENGLISH)
         simpleDateFormat.timeZone = TimeZone.getDefault()
         return simpleDateFormat.format(date)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean
-    {
-        menuInflater.inflate(R.menu.menu_main,menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean
-    {
-        return when(item.itemId)
-        {
-            R.id.action_refresh->{
-                requestLocationData()
-                true
-            }
-            else->return super.onOptionsItemSelected(item)
-        }
     }
 }

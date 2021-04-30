@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">RevisedWeatherApp</string>
+    <string name="app_name">Revised Weather App</string>
+    // Loading Dialog Text
+    <string name="loading">Loading&#8230;</string>
+
+    <string name="km_per_hour">KM/H</string>
+    <string name="refresh">Refresh</string>
+
+    //Image Description Identification
+    <string name="image_content_description">image</string>
+    <string name="heading_temperature">Temperature</string>
+    <string name="heading_min_temp">Minimum Temperature:</string>
+    <string name="heading_max_temp">Maximum Temperature:</string>
+    <string name="degrees_c"> Degrees C</string>
 </resources>

@@ -11,7 +11,7 @@ data class WeatherResponse(
     val wind: WindModel,
     val clouds: CloudModel,
     val dt: Int,
-    val commonSystemModel: CommonSystemModel,
+    val sys: CommonSystemModel,
     val id: Int,
     val name: String,
     val cod: Int
